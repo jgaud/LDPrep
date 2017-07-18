@@ -29,12 +29,16 @@ public class World  {
 
     public Tile GetTileAt(int x, int y)
     {
-        if(x < 0 || x > Width || y < 0 || y > Height)
+        if(x < 0 || x >= Width || y < 0 || y >= Height)
         {
             Debug.Log("Tile : (" + x + "," + y + ")");
             return null;
         }
-        return tiles[x, y];
+        else
+        {
+            return tiles[x, y];
+        }
+        
     }
 
     public void RandomizeTiles()
