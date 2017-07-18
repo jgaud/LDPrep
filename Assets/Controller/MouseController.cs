@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MouseController : MonoBehaviour {
 
     public GameObject circleCursorPrefab;
 
+    Tile.TileType buildModeTile = Tile.TileType.Floor;
+
+    bool isDragging = false;
     Vector3 lastFramePosition;
     Vector3 dragStartPosition;
     Vector3 currFramePosition;
@@ -22,7 +26,6 @@ public class MouseController : MonoBehaviour {
         currFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         currFramePosition.z = 0;
 
-        //UpdateCursor();
         UpdateDragging();
         UpdateCameraMovement();
 
@@ -31,25 +34,12 @@ public class MouseController : MonoBehaviour {
 
     }
 
-    //void UpdateCursor()
-    //{
-    //    Tile tileUnderMouse = WorldController.Instance.GetTileAtWorldCoord(currFramePosition);
-    //    if (tileUnderMouse != null)
-    //    {
-    //        circleCursor.SetActive(true);
-    //        circleCursor.transform.position = new Vector3(tileUnderMouse.X, tileUnderMouse.Y, 0);
-    //    }
-    //    else
-    //    {
-    //        circleCursor.SetActive(false);
-    //    }
-    //}
-
     void UpdateDragging()
     {
         //Start drag
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) &&! EventSystem.current.IsPointerOverGameObject())
         {
+            isDragging = true;
             dragStartPosition = currFramePosition;
         }
 
@@ -80,7 +70,7 @@ public class MouseController : MonoBehaviour {
             SimplePool.Despawn(go);
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && isDragging)
         {
             //Display a preview of the drag area
             for (int x = startX; x <= endX; x++)
@@ -100,7 +90,7 @@ public class MouseController : MonoBehaviour {
         }
 
         //End drag
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && isDragging)
         {
             
 
@@ -111,11 +101,11 @@ public class MouseController : MonoBehaviour {
                     Tile t = WorldController.Instance.World.GetTileAt(x, y);
                     if (t != null)
                     {
-                        t.Type = Tile.TileType.Floor;
+                        t.Type = buildModeTile;
                     }
                 }
             }
-
+            isDragging = false;
 
         }
     }
@@ -130,5 +120,15 @@ public class MouseController : MonoBehaviour {
 
         Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel");
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 25f);
+    }
+
+    public void SetMode_BuildFloor()
+    {
+        buildModeTile = Tile.TileType.Floor;
+    }
+
+    public void SetMode_Bulldoze()
+    {
+        buildModeTile = Tile.TileType.Empty;
     }
 }
