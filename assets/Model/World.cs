@@ -5,13 +5,13 @@ using UnityEngine;
 public class World  {
 
     Tile[,] tiles;
-    int width;
-    int height;
+    public int Width { get; protected set; }
+    public int Height { get; protected set; }
 
     public World(int width = 100, int height = 100)
     {
-        this.width = width;
-        this.height = height;
+        this.Width = width;
+        this.Height = height;
 
         tiles = new Tile[width, height];
 
@@ -25,37 +25,13 @@ public class World  {
 
     }
 
-    public int Width
+
+
+    public Tile GetTileAt(int x, int y)
     {
-        get
+        if(x < 0 || x > Width || y < 0 || y > Height)
         {
-            return width;
-        }
-
-        set
-        {
-            width = value;
-        }
-    }
-
-    public int Height
-    {
-        get
-        {
-            return height;
-        }
-
-        set
-        {
-            height = value;
-        }
-    }
-
-    public Tile getTileAt(int x, int y)
-    {
-        if(x < 0 || x > width || y < 0 || y > height)
-        {
-            Debug.LogError("Tile : (" + x + "," + y + ")");
+            Debug.Log("Tile : (" + x + "," + y + ")");
             return null;
         }
         return tiles[x, y];
@@ -63,9 +39,9 @@ public class World  {
 
     public void RandomizeTiles()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 if (Random.Range(0, 2) == 0)
                 {

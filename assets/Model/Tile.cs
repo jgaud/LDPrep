@@ -15,8 +15,8 @@ public class Tile {
 
     World world;
 
-    int x;
-    int y;
+    public int X { get; protected set; }
+    public int Y { get; protected set; }
 
     public TileType Type
     {
@@ -37,36 +37,10 @@ public class Tile {
         }
     }
 
-    public int X
-    {
-        get
-        {
-            return x;
-        }
-
-        set
-        {
-            x = value;
-        }
-    }
-
-    public int Y
-    {
-        get
-        {
-            return y;
-        }
-
-        set
-        {
-            y = value;
-        }
-    }
-
     public Tile(World world, int x, int y)
     {
         this.X = x;
-        this.y = y;
+        this.Y = y;
         this.world = world;
     }
 
@@ -75,7 +49,7 @@ public class Tile {
         cbTileTypeChanged += callback;
     }
 
-    public void unregisterTileTypeChangedCallback(Action<Tile> callback)
+    public void UnregisterTileTypeChangedCallback(Action<Tile> callback)
     {
         cbTileTypeChanged -= callback;
     }
